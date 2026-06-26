@@ -18,11 +18,13 @@ import path from "node:path";
 const SITE_DIR = path.resolve(process.env.SITE_DIR || ".");
 const NEWS_EVERY = Number(process.env.NEWS_EVERY_SECONDS || 120) * 1000;
 const SLOW_EVERY = Number(process.env.SLOW_EVERY_SECONDS || 21600) * 1000;
+const SCORES_EVERY = Number(process.env.SCORES_EVERY_SECONDS || 600) * 1000; // cheap/local, no API
 
 const JOBS = [
   { name: "news", script: "news-bot.js", feed: "news-feed.json", every: NEWS_EVERY },
   { name: "bias", script: "bias-bot.js", feed: "bias-feed.json", every: SLOW_EVERY },
   { name: "calendar", script: "calendar-bot.js", feed: "calendar-feed.json", every: SLOW_EVERY },
+  { name: "scores", script: "score-bot.js", feed: "pair-scores.json", every: SCORES_EVERY },
 ];
 
 function runJob(job) {
@@ -68,7 +70,7 @@ if (process.env.SERVE === "1") {
         }
         const ext = path.extname(filePath).toLowerCase();
         const headers = { "content-type": TYPES[ext] || "application/octet-stream" };
-        if (/-feed\.json$/.test(urlPath)) {
+        if (/(-feed|pair-scores)\.json$/.test(urlPath)) {
           headers["cache-control"] = "no-store";
           headers["access-control-allow-origin"] = ALLOW_ORIGIN;
         }
