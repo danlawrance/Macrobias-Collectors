@@ -37,18 +37,22 @@ const QUEUE_PATH = './pending-queue.json';
 
 // Free RSS sources — add/remove freely. More sources = more stories.
 const SOURCES = [
-  { source: 'Reuters Markets',   url: 'https://www.reutersagency.com/feed/?best-topics=markets&post_type=best' },
-  { source: 'FXStreet',          url: 'https://www.fxstreet.com/rss/news' },
-  { source: 'Investing.com',     url: 'https://www.investing.com/rss/news_1.rss' },
-  { source: 'DailyFX',           url: 'https://www.dailyfx.com/feeds/market-news' },
+  // Central-bank & official feeds — reliable from a cloud server (they don't block).
   { source: 'Federal Reserve',   url: 'https://www.federalreserve.gov/feeds/press_all.xml' },
-  { source: 'ECB',               url: 'https://www.ecb.europa.eu/rss/press.html' },
   { source: 'Bank of England',   url: 'https://www.bankofengland.co.uk/rss/news' },
   { source: 'Bank of Canada',    url: 'https://www.bankofcanada.ca/content_type/press-releases/feed/' },
-  // Add: RBA, BoJ, SNB, RBNZ, BLS, ONS, Eurostat, etc. (see spec)
+  { source: 'ECB',               url: 'https://www.ecb.europa.eu/rss/press.html' },
+  { source: 'FRED',              url: 'https://fredblog.stlouisfed.org/feed' },
+  // Commercial forex/macro news — higher volume, but may block a datacentre IP (403).
+  { source: 'Investing.com',     url: 'https://www.investing.com/rss/news_1.rss' },
+  // Removed: Reuters (dead/404), FXStreet & DailyFX (block bots/403).
+  // For reliable high-volume commercial news from a server, a news API beats scraping RSS.
 ];
 
-const parser = new Parser({ timeout: 15000 });
+const parser = new Parser({
+  timeout: 15000,
+  headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' },
+});
 const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
 
 // ---------- helpers ----------
