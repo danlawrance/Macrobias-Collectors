@@ -1,0 +1,12 @@
+{
+  "name": "macrobias-collectors",
+  "version": "1.0.0",
+  "description": "Runs the news, bias and calendar collectors and serves the three feeds.",
+  "type": "module",
+  "scripts": { "start": "node runner.js" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "rss-parser": "^3.13.0"
+  },
+  "engines": { "node": ">=18" }
+}
